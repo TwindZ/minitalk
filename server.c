@@ -6,11 +6,16 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:05 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/16 12:43:23 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/17 17:52:02 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int main()
+int ft_decode(char *bin)
 {
 	
+}
+
+int main()
+{
+	ft_decode("00100000");
 }

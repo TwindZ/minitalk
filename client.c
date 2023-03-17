@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:07 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/17 17:21:46 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/17 17:43:52 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,21 @@
 #include <signal.h>
 
 
-void ft_encode(unsigned int octet, int typesize, int pid)
+void ft_encode(unsigned int octets, int typesize, int pid)
 {
 	unsigned int btindex;
 	unsigned char bt;
 	
-	int i
+	int i;
 
-	i = 0;
+	i = typesize;
 	btindex = 0;
-	while
-	{
-		while(btindex < 8)
+
+		while(i)
 		{
-			bt = octet + i;
-			bt = bt << btindex;
-			bt = bt >> 7; 
-			if(bt == 0)
+
+			i--;
+			if((octets >> i & 1) == 0)
 			{
 				// kill(pid, SIGUSR1);
 				write(1, "0", 1);
@@ -43,7 +41,6 @@ void ft_encode(unsigned int octet, int typesize, int pid)
 			}
 			btindex++;
 		}
-	}
 	write(1, "\n", 1);
 }
 
