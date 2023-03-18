@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:07 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/17 17:43:52 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/18 11:29:30 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <signal.h>
-
+#include "minitalk.h"
 
 void ft_encode(unsigned int octets, int typesize, int pid)
 {
@@ -27,16 +24,16 @@ void ft_encode(unsigned int octets, int typesize, int pid)
 
 		while(i)
 		{
-
+			usleep(100000);
 			i--;
 			if((octets >> i & 1) == 0)
 			{
-				// kill(pid, SIGUSR1);
+				kill(pid, SIGUSR1);
 				write(1, "0", 1);
 			}
 			else
 			{
-				// kill(pid, SIGUSR2);
+				kill(pid, SIGUSR2);
 				write(1, "1", 1);
 			}
 			btindex++;
@@ -56,21 +53,23 @@ int	ft_strlen(char *str)
 
 int main(int argc, char **argv)
 {
-	struct sigaction sa;
-	
+	int serverpid;
 	int i;
 	
-	i = 0;	
-	
+	serverpid = ft_atoi(argv[1]);
+	// sleep(10);
+	// kill(serverpid, SIGTERM);
+	i = 0;
 	if(argc == 3)
 	{
-		ft_encode(ft_strlen(argv[2]), 32, 12345);
+		ft_encode(ft_strlen(argv[2]), 32, serverpid);
+		usleep(5000000);
 		while(argv[2][i])
 		{
 			write(1, "\'", 1);
 			write(1, &argv[2][i], 1);
 			write(1, "\' - ", 4);
-			ft_encode(argv[2][i], 8, 12345);
+			ft_encode(argv[2][i], 8, serverpid);
 			i++;
 		}
 	}

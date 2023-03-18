@@ -1,6 +1,6 @@
 NAME = client
 
-SRC =	client.c
+SRC =	client.c \ server.c
 		
 OBJS_DIR = objs/
 OBJS = $(SRC:%.c=%.o)
