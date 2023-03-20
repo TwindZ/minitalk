@@ -6,33 +6,39 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:05 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/18 11:30:57 by emman            ###   ########.fr       */
+/*   Updated: 2023/03/19 16:05:07 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-
-
-void	ft_decode(int sig)
+void	ft_decode(int bit,)
 {
-	if (sig == 12)
-	{
-		write(1, "1", 1);
-	}
-	else
-	{
-		write(1, "0", 1);
-	}
+	int octet;
+
+	octet = 0;
+	
+}
+
+void	ft_handle_sig(int sig)
+{
+		if (sig == 12)
+		{
+			ft_decode(1)
+		}
+		else
+		{
+			ft_decode(0);
+		}
 }
 
 int main()
 {
 	struct sigaction sa1 = { 0 };
-	sa1.sa_handler = &ft_decode;
+	sa1.sa_handler = &ft_handle_sig;
 	sigaction(SIGUSR1, &sa1, NULL);
 	struct sigaction sa2 = { 0 };
-	sa2.sa_handler = &ft_decode;
+	sa2.sa_handler = &ft_handle_sig;
 	sigaction(SIGUSR2, &sa2, NULL);
 	
 	int pid;
