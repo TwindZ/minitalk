@@ -6,7 +6,7 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:07 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/18 11:29:30 by emman            ###   ########.fr       */
+/*   Updated: 2023/03/18 12:20:22 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_encode(unsigned int octets, int typesize, int pid)
 
 		while(i)
 		{
-			usleep(100000);
+			// usleep(30);
 			i--;
 			if((octets >> i & 1) == 0)
 			{
