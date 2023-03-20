@@ -1,29 +1,34 @@
-NAME = client
+SERVERSRC =	server.c \
+			ft_putnbr.c \
+			ft_itoa.c
 
-SRC =	client.c \ server.c
+CLIENTSRC = client.c \
+			ft_atoi.c \
+			ft_strncmp.c \
 		
-OBJS_DIR = objs/
-OBJS = $(SRC:%.c=%.o)
-OBJS := $(OBJS:%=$(OBJS_DIR)%)
+SERVEROBJS = $(SERVERSRC:%.c=%.o)
+CLIENTOBJS = $(CLIENTSRC:%.c=%.o)
+
 
 CFLAGS = -Wall -Wextra -Werror
 
 CC = gcc
 
-all: $(NAME)
+all: client server
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS)  -o $(NAME)
+client: $(CLIENTOBJS)
+	$(CC) $(CFLAGS) $(CLIENTOBJS)  -o client
 
-$(OBJS_DIR)%.o:%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
+server: $(SERVEROBJS)
+	$(CC) $(CFLAGS) $(SERVEROBJS)  -o server
 
 clean:
-	rm -rf $(OBJS_DIR)
+	rm -rf $(SERVEROBJS)
+	rm -rf $(CLIENTOBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f client
+	rm -f server
 
 re: fclean all
 

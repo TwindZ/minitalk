@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:07 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/18 14:36:14 by emman            ###   ########.fr       */
+/*   Updated: 2023/03/20 16:09:29 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void ft_encode(unsigned int octets, int typesize, int pid)
 
 		while(i)
 		{
-			// usleep(30);
+			usleep(30);
 			i--;
 			if((octets >> i & 1) == 0)
 			{
@@ -51,6 +51,7 @@ int	ft_strlen(char *str)
 
 int main(int argc, char **argv)
 {
+	// siginfo_t info;
 	int serverpid;
 	int i;
 	
@@ -60,15 +61,23 @@ int main(int argc, char **argv)
 	i = 0;
 	if(argc == 3)
 	{
+		if(ft_strncmp("&exit", argv[2], 5) == 0)
+		{	
+			kill(serverpid, SIGTERM);
+			
+		}	
 		ft_encode(ft_strlen(argv[2]), 32, serverpid);
-		usleep(5000000);
+		sleep(5);
 		while(argv[2][i])
 		{
 			write(1, "\'", 1);
 			write(1, &argv[2][i], 1);
 			write(1, "\' - ", 4);
-			ft_encode(argv[2][i], 8, serverpid);
+			// if(serverpid == info.si_pid)
+				ft_encode(argv[2][i], 8, serverpid);
 			i++;
 		}
+		ft_encode(argv[2][i], 8, serverpid);
 	}
+	// kill(serverpid, SIGTERM);
 }
