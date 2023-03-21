@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 17:41:32 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/18 10:04:21 by emman            ###   ########.fr       */
+/*   Updated: 2023/03/21 09:55:54 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_putstr(char *str)
 {
-	while(*str++)
-		write(1, &str, 1);
+	while(*str)
+		write(1, str++, 1);
 }
 
 int	ft_countnb(int n)
