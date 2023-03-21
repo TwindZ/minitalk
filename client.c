@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:07 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/21 13:24:56 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:38:47 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,14 @@
 
 void ft_encode(unsigned int octets, int typesize, int pid)
 {
-	unsigned int btindex;	
-	int i;
-
-	i = typesize;
-	btindex = 0;
-
-	while(i)
+	while(typesize)
 	{
-		usleep(30);
-		i--;
-		if((octets >> i & 1) == 0)
+		usleep(50);
+		typesize--;
+		if((octets >> typesize & 1) == 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		btindex++;
 	}
 }
 
@@ -54,14 +47,11 @@ int main(int argc, char **argv)
 		if(ft_strncmp("&exit", argv[2], 5) == 0)
 		{	
 			kill(serverpid, SIGTERM);
-			return(0);
+			return(1);
 		}	
 		ft_encode(ft_strlen(argv[2]), 32, serverpid);
 		while(argv[2][i])
-		{
-			ft_encode(argv[2][i], 8, serverpid);
-			i++;
-		}
+			ft_encode(argv[2][i++], 8, serverpid);
 		ft_encode(argv[2][i], 8, serverpid);
 	}
 }
