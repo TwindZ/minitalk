@@ -1,10 +1,13 @@
 SERVERSRC =	server.c \
 			ft_putnbr.c \
+			ft_calloc.c\
 			ft_itoa.c
 
 CLIENTSRC = client.c \
 			ft_atoi.c \
+			ft_putnbr.c \
 			ft_strncmp.c \
+			ft_calloc.c\
 		
 SERVEROBJS = $(SERVERSRC:%.c=%.o)
 CLIENTOBJS = $(CLIENTSRC:%.c=%.o)

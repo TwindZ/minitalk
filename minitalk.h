@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:10 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/21 17:12:45 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:30:08 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 typedef struct 	s_data
 {
-	int		i;
-	int		j;
 	int 	octet;
 	int 	len;
 	char 	*str;
-	int 	old_si_pid;
+	int 	si_pid;
+	int		typesize;
+	
 }				t_data;
 
 #include <stdio.h>
@@ -33,5 +33,6 @@ int	ft_atoi(char *str);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 void	ft_putstr(char *str);
 char	*ft_itoa(int n);
+void	*ft_calloc(size_t count, size_t size);
 
 #endif

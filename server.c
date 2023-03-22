@@ -6,50 +6,57 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:05 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/21 17:39:57 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:46:13 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
+t_data g_data;
+
 void	ft_handle_sig(int sig, siginfo_t *info, void *ucontext)
 {
 	static int	i;
 	static int	j;
-	static int octet;
 	static int len;
-	static char *str;
 	(void) info;
 	(void) ucontext;
 	
-	octet = octet * 2;
+	if(sig == SIGTERM)
+	{
+		ft_putstr("\nClosing server...\n\n");
+		sleep(3);
+		exit(0);
+	}	
+	g_data.octet = g_data.octet << 1;
 	if (sig == SIGUSR2)
-		octet += 1;
+		g_data.octet += 1;
 	i++;
 	if(i == 32)
 	{
-		len = octet;
-		octet = 0;
+		len = g_data.octet;
+		g_data.octet = 0;
 	}
 	else if(i > 32 && i % 8 == 0)
 	{
 		if(i == 40)
 		{
-			str = malloc((len + 1) * sizeof(char));
-			if(!str)
+			g_data.str = malloc((len + 1) * sizeof(char));
+			if(!g_data.str)
 				return;
 		}
-		if(octet == 0)
+		if(g_data.octet == 0)
 		{
-			ft_putstr(str);
+			ft_putstr(g_data.str);
+			kill(info->si_pid, SIGUSR1);
 			i = 0;
 			j = 0;
 			len = 0;
-			free(str);
+			free(g_data.str);
 			return;
 		}
-		str[j++] = octet;
-		octet = 0;
+		g_data.str[j++] = g_data.octet;
+		g_data.octet = 0;
 	}	
 }
 
@@ -61,6 +68,8 @@ int main()
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
+	
 	
 	int pid;
 	
