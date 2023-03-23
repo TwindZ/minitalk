@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:07 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/22 16:42:56 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/23 13:28:51 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	ft_handle_sig(int sig)
 {
+	
 	if(sig == SIGUSR1)
-		ft_putstr("\nHouston, touch down !\n\n");
+		ft_putstr("\nHouston, touch down !\n\n");	
 	exit(0);
 }
 
@@ -54,11 +55,6 @@ int main(int argc, char **argv)
 	i = 0;
 	if(argc == 3)
 	{
-		if(ft_strncmp("&exit", argv[2], 5) == 0)
-		{	
-			kill(serverpid, SIGTERM);
-			return(1);
-		}	
 		ft_encode(ft_strlen(argv[2]), 32, serverpid);
 		while(argv[2][i])
 			ft_encode(argv[2][i++], 8, serverpid);
