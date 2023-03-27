@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr.c                                        :+:      :+:    :+:   */
+/*   minitalk_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/23 17:41:32 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/21 09:55:54 by emlamoth         ###   ########.fr       */
+/*   Created: 2023/03/27 14:32:56 by emlamoth          #+#    #+#             */
+/*   Updated: 2023/03/27 14:46:40 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,25 @@
 
 void	ft_putstr(char *str)
 {
-	while(*str)
+	while (*str)
 		write(1, str++, 1);
 }
 
-int	ft_countnb(int n)
+int	ft_strlen(char *str)
 {
 	int	i;
 
 	i = 0;
-	if (n == 0)
-		return (1);
-	while (n != 0)
-	{
-		n /= 10;
+	while (str[i])
 		i++;
-	}
 	return (i);
 }
 
-int	ft_putnbr(int n)
+void	ft_putnbr(int nb)
 {
-	int		s;
-	int		nb;
 	char	c;
 
-	s = 0;
-	nb = n;
-	if (nb == -2147483648)
-		ft_putstr("-2147483648");
-	else if (nb < 0)
-	{
-		write(1, "-", 1);
-		ft_putnbr(nb *= -1);
-	}	
-	else if (nb < 10)
+	if (nb < 10)
 	{
 		c = (nb + 48);
 		write(1, &c, 1);
@@ -58,7 +42,32 @@ int	ft_putnbr(int n)
 		ft_putnbr(nb / 10);
 		ft_putnbr(nb % 10);
 	}
-	if (n < 0)
-		s = 1;
-	return (ft_countnb(n) + s);
+}
+
+int	ft_atoi(char *str)
+{
+	int	i;
+	int	s;
+	int	num;
+
+	i = 0;
+	s = 1;
+	num = 0;
+	if (!str)
+		return (0);
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		s = -1;
+		i++;
+	}
+	while (str[i] != '\0' && (str[i] >= '0' && str[i] <= '9'))
+	{
+		num = num * 10 + str[i] - '0';
+		i++;
+	}
+	return (s * num);
 }

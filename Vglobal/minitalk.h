@@ -1,38 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   minitalk.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/11 10:57:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/22 16:38:19 by emlamoth         ###   ########.fr       */
+/*   Created: 2023/03/16 12:43:10 by emlamoth          #+#    #+#             */
+/*   Updated: 2023/03/27 14:45:50 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#ifndef MINITALK_H
+# define MINITALK_H
 
-void	*ft_memset(void *s, int c, size_t len)
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <signal.h>
+
+typedef struct s_data
 {
-	unsigned int		i;
-	unsigned char		*str;
+	char	*str;
+	int		free_flag;
+	int		i;
+	int		j;
+	int		len;
+	int		octet;
+	int		si_pid;
+}t_data;
 
-	str = (unsigned char *)s;
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (i < len)
-		str[i++] = c;
-	return (str);
-}
+int		ft_atoi(char *str);
+void	ft_putnbr(int nb);
+void	ft_putstr(char *str);
+int		ft_strlen(char *str);
 
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*a;
-
-	a = (malloc(count * size));
-	if (!a)
-		return (NULL);
-	ft_memset(a, 0, count * size);
-	return (a);
-}
+#endif

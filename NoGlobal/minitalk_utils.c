@@ -1,19 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   minitalk_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/06 16:29:06 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/18 10:47:12 by emman            ###   ########.fr       */
+/*   Created: 2023/03/27 14:32:56 by emlamoth          #+#    #+#             */
+/*   Updated: 2023/03/27 14:46:40 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/*The ft_atoi() function converts the initial portion of the string
-pointed to by <str> to int.*/
+void	ft_putstr(char *str)
+{
+	while (*str)
+		write(1, str++, 1);
+}
+
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+void	ft_putnbr(int nb)
+{
+	char	c;
+
+	if (nb < 10)
+	{
+		c = (nb + 48);
+		write(1, &c, 1);
+	}
+	else
+	{
+		ft_putnbr(nb / 10);
+		ft_putnbr(nb % 10);
+	}
+}
+
 int	ft_atoi(char *str)
 {
 	int	i;
