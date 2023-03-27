@@ -6,82 +6,110 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:05 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/27 14:49:01 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/03/27 17:10:18 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-t_data	g_data;
-
-void	ft_dump(void)
+void	ft_dump(t_data *data)
 {
-	if (g_data.i == g_data.len * 8 + 40)
+	if (data->i == data->len * 8 + 40)
 	{
-		ft_putstr(g_data.str);
-		kill(g_data.si_pid, SIGUSR1);
+		ft_putstr(data->str);
+		kill(data->si_pid, SIGUSR1);
 	}
-	g_data.i = 0;
-	g_data.j = 0;
-	g_data.len = 0;
-	g_data.octet = 0;
-	if (g_data.free_flag == 1)
-		free(g_data.str);
-	g_data.free_flag = 0;
+	data->i = 0;
+	data->j = 0;
+	data->len = 0;
+	data->octet = 0;
+	if (data->free_flag == 1)
+	{
+		free(data->str);
+		// free(data);
+	}
+	data->free_flag = 0;
 }
 
-void	ft_store_str(void)
+void	ft_store_str(t_data *data)
 {
-	if (g_data.i == 40)
+	if (data->free_flag == 0)
 	{
-		g_data.str = malloc((g_data.len + 1) * sizeof(char));
-		if (!g_data.str)
+		data->str = malloc((data->len + 1) * sizeof(char));
+		if (!data->str)
 			exit(-1);
-		g_data.free_flag = 1;
+		data->free_flag = 1;
 	}
-	if (g_data.octet == 0)
+	if (data->octet == 0)
 	{
-		ft_dump();
+		ft_dump(data);
 		return ;
 	}
-	g_data.str[g_data.j++] = g_data.octet;
-	g_data.octet = 0;
+	data->str[data->j++] = data->octet;
+	data->octet = 0;
+	data->i = 0;
+}
+
+t_data	*ft_init_struct(void)
+{
+	static t_data *data;
+	
+	if(!data)
+	{
+		ft_putstr("init");
+		data = malloc(sizeof(t_data));
+		data->str = NULL;
+		data->free_flag = 0;
+		data->i = 0;
+		data->j = 0;
+		data->len = 0;
+		data->octet = 0;
+		data->si_pid = 0;
+	}
+	return(data);
 }
 
 void	ft_handle_sig(int sig, siginfo_t *info, void *ucontext)
 {
+	t_data	*data;
+
+	data = ft_init_struct();
+
 	(void) ucontext;
-	if (g_data.si_pid != info->si_pid)
+	if (data->si_pid != info->si_pid)
 	{
-		if (g_data.free_flag == 1)
-			ft_dump();
-		g_data.si_pid = info->si_pid;
+		if (data->free_flag == 1)
+			ft_dump(data);
+		data->si_pid = info->si_pid;
 	}
-	g_data.octet = g_data.octet << 1;
+	data->octet = data->octet << 1;
 	if (sig == SIGUSR2)
-		g_data.octet += 1;
-	g_data.i++;
-	if (g_data.i == 32)
+		data->octet += 1;
+	data->i++;
+	if (data->i == 32 && data->free_flag == 0)
 	{
-		g_data.len = g_data.octet;
-		g_data.octet = 0;
+		data->len = data->octet;
+		data->octet = 0;
+		data->i = 0;
 	}
-	else if (g_data.i > 32 && g_data.i % 8 == 0)
-		ft_store_str();
+	else if (data->i == 8 && data->len > 0)
+		ft_store_str(data);
 }
 
 int	main(void)
 {
 	int					pid;
 	struct sigaction	sa;
-
+	
 	sa.sa_sigaction = &ft_handle_sig;
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
+	ft_init_struct();
 	pid = getpid();
+	ft_putstr("\e[33mServer ID : ");
 	ft_putnbr(pid);
-	write(1, "\n", 1);
+	ft_putstr("\n\e[32mReady to receive !\n\e[0m");
 	while (1)
 		pause();
 }
