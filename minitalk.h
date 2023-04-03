@@ -6,14 +6,13 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:10 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/29 16:42:57 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:47:30 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_H
 # define MINITALK_H
 
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>

@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 12:43:05 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/03/29 16:51:06 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:33:34 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ static void	ft_dump(t_data *data)
 {
 	if (data->i == data->len * 8 + 40)
 	{
+		kill(data->si_pid, SIGUSR2);
 		ft_putstr(data->str);
 		ft_putstr("\e[32m\n");
 		ft_putnbr(data->i);
-		ft_putstr(" bits received !\nReady to receive again !\n\e[0m");
-		kill(data->si_pid, SIGUSR2);
+		ft_putstr(" bits received !\n\e[33mServer ID : ");
+		ft_putnbr(getpid());
+		ft_putstr("\n\e[32mReady to receive again !\n\e[0m");
 	}
 	data->i = 0;
 	data->j = 0;
@@ -29,19 +31,20 @@ static void	ft_dump(t_data *data)
 	if (data->free_flag == 1)
 	{
 		free(data->str);
-		//free(data); //pas capable de free la deuxieme fois comme si la struct ne se ft_init pas
+		data->str = NULL;
 		data->free_flag = 0;
 	}
 }
 
 static t_data	*ft_init_struct(void)
 {
-	static t_data *data;
-	
-	if(!data)
+	static t_data	*data;
+
+	if (!data)
 	{
-		ft_putstr("init");
 		data = malloc(sizeof(t_data));
+		if (!data)
+			exit(EXIT_FAILURE);
 		data->str = NULL;
 		data->free_flag = 0;
 		data->i = 0;
@@ -50,7 +53,7 @@ static t_data	*ft_init_struct(void)
 		data->octet = 0;
 		data->si_pid = 0;
 	}
-	return(data);
+	return (data);
 }
 
 static void	ft_store_str(t_data *data)
@@ -59,26 +62,24 @@ static void	ft_store_str(t_data *data)
 	{
 		data->str = malloc((data->len + 1) * sizeof(char));
 		if (!data->str)
-			exit(-1);
+			exit(EXIT_FAILURE);
 		data->free_flag = 1;
 	}
+	data->str[data->j++] = data->octet;
 	if (data->octet == 0)
 	{
 		ft_dump(data);
 		return ;
 	}
-	data->str[data->j++] = data->octet;
 	data->octet = 0;
 }
-
 
 static void	ft_sa_sigaction(int sig, siginfo_t *info, void *ucontext)
 {
 	t_data	*data;
 
-	data = ft_init_struct();
-
 	(void) ucontext;
+	data = ft_init_struct();
 	if (data->si_pid != info->si_pid && info->si_pid != 0)
 	{
 		if (data->free_flag == 1)
@@ -87,7 +88,7 @@ static void	ft_sa_sigaction(int sig, siginfo_t *info, void *ucontext)
 	}
 	data->octet = data->octet << 1;
 	if (sig == SIGUSR2)
-		data->octet += 1;
+		data->octet |= 1;
 	data->i++;
 	if (data->i == 32 && data->free_flag == 0)
 	{
@@ -96,23 +97,23 @@ static void	ft_sa_sigaction(int sig, siginfo_t *info, void *ucontext)
 	}
 	else if (data->i > 32 && data->i % 8 == 0)
 		ft_store_str(data);
-	kill(data->si_pid, SIGUSR1);
+	if (data->i < data->len * 8 + 40)
+		kill(data->si_pid, SIGUSR1);
 }
 
 int	main(void)
 {
-	int					pid;
 	struct sigaction	sa;
-	
+
 	sa.sa_sigaction = &ft_sa_sigaction;
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 	ft_init_struct();
-	pid = getpid();
 	ft_putstr("\e[33mServer ID : ");
-	ft_putnbr(pid);
+	ft_putnbr(getpid());
 	ft_putstr("\n\e[32mReady to receive !\n\e[0m");
 	while (1)
 		pause();
+	free(ft_init_struct);
 }
